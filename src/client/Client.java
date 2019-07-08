@@ -1,0 +1,260 @@
+package client;
+
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.net.Socket;
+import java.util.Scanner;
+
+public class Client
+{
+	private static DataOutputStream dout;
+	private static DataInputStream din;
+	private static Scanner input = new Scanner(System.in);
+	private static String anwser = "end";
+	private static String params[];
+
+	public static void main(String[] args)
+	{
+
+		try
+		{
+			while (true)
+			{
+				Socket socket = new Socket("127.0.0.1", 6969);
+				din = new DataInputStream(socket.getInputStream());
+				dout = new DataOutputStream(socket.getOutputStream());
+				boolean hasNotChosen = false;
+
+				String entryOptions = "1. Login\n2. Register\n3. Exit";
+				System.out.println(entryOptions);
+				String option = input.nextLine();
+				dout.writeUTF(option);
+				dout.flush();
+				anwser = din.readUTF();
+				String typeOfAccount = "";
+				System.out.println(anwser);
+				if (anwser.equalsIgnoreCase("ERROR: You didn't choose one of the options."))
+				{
+					hasNotChosen = true;
+					System.out.println("\n" + entryOptions);
+				} else
+					hasNotChosen = false;
+
+				while (hasNotChosen)
+				{
+
+					System.out.println(entryOptions);
+					option = input.nextLine();
+					dout.writeUTF(option);
+					dout.flush();
+					anwser = din.readUTF();
+					System.out.println(anwser);
+					if (anwser.equalsIgnoreCase("ERROR: You didn't choose one of the options."))
+						hasNotChosen = true;
+					else
+						hasNotChosen = false;
+				}
+
+				if (anwser.equals("Exiting..."))
+				{
+					System.out.println("Bye");
+					socket.close();
+					din.close();
+					dout.close();
+					return;
+				}
+
+				if (anwser.equals("Login: Please enter an username and password. "))
+				{
+					dout.writeUTF(input.nextLine());
+					dout.flush();
+					dout.writeUTF(input.nextLine());
+					dout.flush();
+					anwser = din.readUTF();
+					System.out.println(anwser);
+					params = anwser.split(" ");
+
+					while (!params[0].equalsIgnoreCase("Successfully"))
+					{
+						dout.writeUTF(input.nextLine());
+						dout.flush();
+						dout.writeUTF(input.nextLine());
+						dout.flush();
+						anwser = din.readUTF();
+						System.out.println(anwser);
+						params = anwser.split(" ");
+					}
+					typeOfAccount = params[4];
+					//System.out.println(typeOfAccount);
+
+				} else if (anwser.equals(
+						"Register: Please enter an username and a password and the type of account you want to create"))
+				{
+					dout.writeUTF(input.nextLine());
+					dout.flush();
+					dout.writeUTF(input.nextLine());
+					dout.flush();
+					dout.writeUTF(input.nextLine());
+					dout.flush();
+
+					anwser = din.readUTF();
+					System.out.println(anwser);
+					params = anwser.split(" ");
+					while (!params[0].equalsIgnoreCase("Congratulations!"))
+					{
+						if (params[0].equalsIgnoreCase("Username"))
+						{
+							// Entering username password and type of account
+							enterNewAccount();
+						} else if (params[0].equalsIgnoreCase("Enter"))
+						{
+							// Entering special password
+							dout.writeUTF(input.nextLine());
+							dout.flush();
+
+							anwser = din.readUTF();
+							System.out.println(anwser);
+							params = anwser.split(" ");
+						} else if (params[0].equalsIgnoreCase("Please"))
+						{
+							enterNewAccount();
+						} else if (params[0].equalsIgnoreCase("Failed."))
+						{
+							enterNewAccount();
+						}
+					}
+				}
+
+				while (true)
+				{
+					if (typeOfAccount.startsWith("client!"))
+					{
+						String choice = input.nextLine();
+						dout.writeUTF(choice);
+						dout.flush();
+						System.out.println(din.readUTF());
+
+						if (choice.equals("2"))
+						{
+							String orderNum;
+							String orderQuantity;
+
+							orderNum = input.nextLine();
+							orderQuantity = input.nextLine();
+							dout.writeUTF(orderNum);
+							dout.flush();
+							dout.writeUTF(orderQuantity);
+							dout.flush();
+							System.out.println(din.readUTF());
+
+							while (!orderNum.equals("0"))
+							{
+								System.out.println("Continuing...");
+								orderNum = input.nextLine();
+								orderQuantity = input.nextLine();
+								dout.writeUTF(orderNum);
+								dout.flush();
+								dout.writeUTF(orderQuantity);
+								dout.flush();
+								System.out.println(din.readUTF());
+							}
+
+						}
+						if (choice.equals("3"))
+						{
+							dout.writeUTF(input.nextLine());
+							dout.flush();
+							System.out.println(din.readUTF());
+						}
+
+						if (choice.equals("6"))
+							return;
+					}
+
+					else if (typeOfAccount.startsWith("admin!"))
+					{
+						String choice = input.nextLine();
+						dout.writeUTF(choice);
+						dout.flush();
+						System.out.println(din.readUTF());
+						
+						if(choice.equals("1"))
+						{
+							int choice2 = Integer.parseInt(input.nextLine());
+							dout.writeInt(choice2);
+							dout.flush();
+							
+							switch(choice2) {
+							case 1:
+								System.out.println(din.readUTF());
+								dout.writeUTF(input.nextLine());
+								dout.flush();
+								System.out.println(din.readUTF());
+								dout.writeUTF(input.nextLine());
+								dout.flush();
+								System.out.println(din.readUTF());
+								dout.writeUTF(input.nextLine());
+								dout.flush();
+								System.out.println(din.readUTF());
+								dout.writeUTF(input.nextLine());
+								dout.flush();
+								break;
+							case 2:
+								
+								break;
+							case 3:
+								break;
+							case 4:
+							}
+
+
+							System.out.println(din.readUTF());
+						}
+						if(choice.equals("2"))
+						{
+							dout.writeUTF(input.nextLine());
+							dout.flush();
+							dout.writeUTF(input.nextLine());
+							dout.flush();
+							
+							System.out.println(din.readUTF());
+						}
+						if(choice.equals("4"))
+						{
+							dout.writeUTF(input.nextLine());
+							dout.flush();
+							
+						}
+				
+					}
+				}
+
+			}
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+
+	}
+
+	private static void enterNewAccount()
+	{
+		try
+		{
+			dout.writeUTF(input.nextLine());
+			dout.flush();
+			dout.writeUTF(input.nextLine());
+			dout.flush();
+			dout.writeUTF(input.nextLine());
+			dout.flush();
+
+			anwser = din.readUTF();
+			System.out.println(anwser);
+			params = anwser.split(" ");
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
+
+}

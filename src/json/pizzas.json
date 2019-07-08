@@ -1,0 +1,83 @@
+[ 
+        {
+			"pizza":{
+			"id": "1",
+            "Name":"Pizza Margarita",
+            "Size": "300g",
+            "Price":"6.99 BGN",
+            "Description":"(tomato sauce, yellow cheese, olive oil, oregano, olive)"
+			}
+        },
+        {
+            "pizza":{
+			"id": "2",
+            "Name":"Pizza Quatro formagio",
+            "Size": "400g",
+            "Price":"8.99 BGN",
+            "Description":"(tomato sauce, four kinds of cheese, yellow cheese, olive oil)"
+			}
+        }
+		{
+			"pizza":{
+			"id": "3",
+            "Name":"Pizza Peperoni",
+            "Size": "365g",
+            "Price":"11.89 BGN",
+            "Description":"(tomato sauce, Мozzarella, Pepperoni salami, yellow cheese)"
+			}
+        },
+		{
+			"pizza":{
+			"id": "4",
+            "Name":"Pizza Prosciutto crudo",
+            "Size": "540g",
+            "Price":"14.59 BGN",
+            "Description":"(tomato sauce, ham, mushrooms, yellow cheese, Prosciutto, olive, olive oil, oregano)"
+			}
+        },
+		{
+			"pizza":{
+			"id": "5",
+            "Name":"Pizza Calzone",
+            "Size": "490g",
+            "Price":"9.89 BGN",
+            "Description":"(closed pizza - tomato sauce, ham, mushrooms, yellow cheese, olive oil, oregano)"
+			}
+        },
+		{
+			"pizza":{
+			"id": "6",
+            "Name":"Pizza Capriciosa",
+            "Size": "485g",
+            "Price":"9.99 BGN",
+            "Description":"(tomato sauce, ham, mushrooms, yellow cheese, olive oil, oregano)"
+			}
+        },
+		{
+			"pizza":{
+			"id": "7",
+            "Name":"Pizza Mortadella",
+            "Size": "430g",
+            "Price":"9.99 BGN",
+            "Description":"(sour cream, Mortadella with pistachio,yellow cheese, olives, soy-garlic mayonnaise and olive oil)"
+			}
+        },
+		{
+			"pizza":{
+			"id": "8",
+            "Name":"Pizza Vegetarian",
+            "Size": "460g",
+            "Price":"7.69 BGN",
+            "Description":"(tomato sauce, onion, peppers, mushrooms, yellow cheese, olive, olive oil, oregano)"
+			}
+        },
+		{
+			"pizza":{
+			"id": "9",
+            "Name":"Pizza Margarita",
+            "Size": "380g",
+            "Price":"14.79 BGN",
+            "Description":"(BBQ sauce, italian Salsiccia, Mozzarella, Cheddar cheese and Jalapeno)"
+			}
+        }
+]
