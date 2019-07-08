@@ -37,4 +37,10 @@ public class Accounts {
 		this.typeOfAcc = typeOfAcc;
 	}
 	
+	public String toString()
+	{
+		return "\n{\"Username\"" + ":" + "\"" + username + "\"," + "\n" +
+				"\"Password\"" + ":" + "\"" + password + "\"," + "\n" +
+				"\"Type of Account\"" + ":" + "\"" + typeOfAcc + "\"}\n";
+	}
 }

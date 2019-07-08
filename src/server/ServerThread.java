@@ -586,8 +586,13 @@ public class ServerThread implements Runnable
 					return false;
 				} else
 				{
-					Accounts newAcount = new Accounts(username, password, typeOfAcc);
-					accounts.add(newAcount);
+					Accounts newAccount = new Accounts(username, password, typeOfAcc);
+					accounts.add(newAccount);
+					
+					JSONObject AccountObject = new JSONObject();
+					AccountObject.put("account", newAccount);
+				    
+				    writeAccount(AccountObject);
 					dout.writeUTF("Congratulations! You have created your new account");
 					dout.flush();
 					return true;
@@ -901,6 +906,59 @@ public class ServerThread implements Runnable
 			e.printStackTrace();
 		}
 	}
+	
+	private void writeAccount(JSONObject Jobj)
+    {
+	JSONParser jsonParser = new JSONParser();
+    
+    try (FileReader reader = new FileReader("C:\\Users\\Preslava\\eclipse-workspace\\TastyPizza\\accounts.json"))
+    {
+        Object obj = null;
+
+        try
+        {
+        	obj = jsonParser.parse(reader);
+        } catch (org.json.simple.parser.ParseException e)
+        {
+        	e.printStackTrace();
+        }
+       
+        itemsList = (JSONArray) obj;
+
+        for (int i=0; i < itemsList.size(); i++) {
+        	Accounts testAccount = parseItemObjectAccount( (JSONObject) itemsList.get(i));
+        	accounts.add(testAccount);
+
+        }
+        
+        reader.close();
+
+    } catch (FileNotFoundException e) {
+        e.printStackTrace();
+    } catch (IOException e) {
+        e.printStackTrace();
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+
+	
+   
+    itemsList.add(Jobj);
+  
+     
+
+    try (FileWriter file = new FileWriter("C:\\Users\\Preslava\\eclipse-workspace\\TastyPizza\\accounts.json")) {
+
+
+        file.write(itemsList.toJSONString());
+        file.flush();
+        file.close();
+
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+    }
+	
 
 	private void writePizzaAdmin(JSONObject Jobj)
     {
