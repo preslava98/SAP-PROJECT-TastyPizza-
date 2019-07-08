@@ -18,11 +18,14 @@ public class Client
 
 		try
 		{
+			String typeOfAccount = "";
 			while (true)
 			{
 				Socket socket = new Socket("127.0.0.1", 6969);
 				din = new DataInputStream(socket.getInputStream());
 				dout = new DataOutputStream(socket.getOutputStream());
+				boolean loggedIn = false;
+				while(!loggedIn) {
 				boolean hasNotChosen = false;
 
 				String entryOptions = "1. Login\n2. Register\n3. Exit";
@@ -31,7 +34,7 @@ public class Client
 				dout.writeUTF(option);
 				dout.flush();
 				anwser = din.readUTF();
-				String typeOfAccount = "";
+				
 				System.out.println(anwser);
 				if (anwser.equalsIgnoreCase("ERROR: You didn't choose one of the options."))
 				{
@@ -83,6 +86,7 @@ public class Client
 						anwser = din.readUTF();
 						System.out.println(anwser);
 						params = anwser.split(" ");
+						loggedIn = true;
 					}
 					typeOfAccount = params[4];
 					//System.out.println(typeOfAccount);
@@ -124,7 +128,7 @@ public class Client
 						}
 					}
 				}
-
+				}
 				while (true)
 				{
 					if (typeOfAccount.startsWith("client!"))
@@ -173,6 +177,7 @@ public class Client
 
 					else if (typeOfAccount.startsWith("admin!"))
 					{
+						while(true) {
 						String choice = input.nextLine();
 						dout.writeUTF(choice);
 						dout.flush();
@@ -180,6 +185,8 @@ public class Client
 						
 						if(choice.equals("1"))
 						{
+							boolean menu2=true;
+							while(menu2) {
 							int choice2 = Integer.parseInt(input.nextLine());
 							dout.writeInt(choice2);
 							dout.flush();
@@ -200,15 +207,48 @@ public class Client
 								dout.flush();
 								break;
 							case 2:
-								
+								System.out.println(din.readUTF());
+								dout.writeUTF(input.nextLine());
+								dout.flush();
+								System.out.println(din.readUTF());
+								dout.writeUTF(input.nextLine());
+								dout.flush();
+								System.out.println(din.readUTF());
+								dout.writeUTF(input.nextLine());
+								dout.flush();
 								break;
 							case 3:
+								System.out.println(din.readUTF());
+								dout.writeUTF(input.nextLine());
+								dout.flush();
+								System.out.println(din.readUTF());
+								dout.writeUTF(input.nextLine());
+								dout.flush();
+								System.out.println(din.readUTF());
+								dout.writeUTF(input.nextLine());
+								dout.flush();
 								break;
 							case 4:
-							}
-
-
+								System.out.println(din.readUTF());
+								dout.writeUTF(input.nextLine());
+								dout.flush();
+								System.out.println(din.readUTF());
+								dout.writeUTF(input.nextLine());
+								dout.flush();
+								System.out.println(din.readUTF());
+								dout.writeUTF(input.nextLine());
+								dout.flush();
+								System.out.println(din.readUTF());
+								dout.writeUTF(input.nextLine());
+								dout.flush();
+								break;
+							case 5:
+								menu2=false;
+								break;
+							}				
 							System.out.println(din.readUTF());
+							break;
+							}
 						}
 						if(choice.equals("2"))
 						{
@@ -225,7 +265,11 @@ public class Client
 							dout.flush();
 							
 						}
+						if(choice.equals("6")) {
+							System.exit(0);
+						}
 				
+					}
 					}
 				}
 

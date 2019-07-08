@@ -77,7 +77,7 @@ public class ServerThread implements Runnable
 			din = new DataInputStream(socket.getInputStream());
 			dout = new DataOutputStream(socket.getOutputStream());
 
-			while (true)
+			while (!loggedIn)
 			{
 				String input = din.readUTF();
 				if (input.equals("1"))
@@ -129,6 +129,7 @@ public class ServerThread implements Runnable
 					dout.writeUTF("ERROR: You didn't choose one of the options.");
 					dout.flush();
 				}
+			}
 				if (loggedIn)
 				{
 					while (true)
@@ -282,10 +283,13 @@ public class ServerThread implements Runnable
 							}
 						} else if (typeOfAccount.equals("admin"))
 						{
+							while(true) {
 							switch (menuChoice)
 							{
 							case "1":
-								dout.writeUTF("Choose what product to add: \n 1. Pizza\n2. Drink\n3. Virgo&TRF\n4. Dessert ");
+								boolean menu2 = true;
+								while(menu2) {
+								dout.writeUTF("Choose what product to add: \n1. Pizza\n2. Drink\n3. Sauce\n4. Dessert\n5. Back ");
 								dout.flush();
 								int productChoice = din.readInt();
 								switch(productChoice)
@@ -324,9 +328,12 @@ public class ServerThread implements Runnable
 										String nameDrink;
 										String sizeDrink;
 										String priceDrink;
-
+										
+										dout.writeUTF("Enter name of drink: ");
 										nameDrink = din.readUTF();
+										dout.writeUTF("Enter the size of the drink: ");
 										sizeDrink = din.readUTF();
+										dout.writeUTF("Enter the price of the drink: ");
 										priceDrink = din.readUTF();
 
 										Drink newDrunk = new Drink(drinkList.size() + 1, nameDrink, sizeDrink, priceDrink);
@@ -349,8 +356,11 @@ public class ServerThread implements Runnable
 										String sizeSauce;
 										String priceSauce;
 
+										dout.writeUTF("Enter the name of sauce: ");
 										nameSauce = din.readUTF();
+										dout.writeUTF("Enter the size of sauce: ");
 										sizeSauce = din.readUTF();
+										dout.writeUTF("Enter the price of sauce: ");
 										priceSauce = din.readUTF();
 
 										Sauce sos = new Sauce(sauceList.size() + 1, nameSauce, sizeSauce, priceSauce);
@@ -372,12 +382,16 @@ public class ServerThread implements Runnable
 										String nameDessert;
 										String sizeDessert;
 										String priceDessert;
-										String descrDessert =
-										null;
+										String descrDessert;
 
+										dout.writeUTF("Enter the name of dessert: ");
 										nameDessert = din.readUTF();
+										dout.writeUTF("Enter the size of dessert: ");
 										sizeDessert = din.readUTF();
+										dout.writeUTF("Enter the price of dessert: ");
 										priceDessert = din.readUTF();
+										dout.writeUTF("Enter the description of dessert: ");
+										descrDessert=din.readUTF();
 
 										Dessert newDessert = new Dessert(dessertList.size() + 1, nameDessert, sizeDessert, priceDessert, descrDessert);
 										dessertList.add(newDessert);
@@ -385,7 +399,7 @@ public class ServerThread implements Runnable
 										
 										
 										JSONObject DessertObject = new JSONObject();
-										DessertObject.put("sauce", newDessert);
+										DessertObject.put("dessert", newDessert);
 									    
 									    writeDessertAdmin(DessertObject);
 									    
@@ -393,8 +407,14 @@ public class ServerThread implements Runnable
 												+ ", " + newDessert.getSize() + ", " + newDessert.getDescription());
 										dout.flush();
 										break;
-								}
+									case 5:
+										menu2=false;
+										break;
 								
+								}
+								break;
+								}
+								break;
 							case "2":
 								dout.writeUTF(
 										"To delete a pizza please enter the pizza id and the special admin password to confirm");
@@ -432,16 +452,20 @@ public class ServerThread implements Runnable
 
 								String idOfOrder = din.readUTF();
 								String specialPassword = din.readUTF();
-
+								break;
+							case "6":
+								System.exit(0);
+								break;
 							default:
 								dout.writeUTF("Error you did not enter one of the options!\n" + menuOptionsAdmin);
 								dout.flush();
 								break;
 							}
 						}
+						}
 					}
 				}
-			}
+
 
 		} catch (Exception e)
 		{
@@ -566,7 +590,6 @@ public class ServerThread implements Runnable
 					accounts.add(newAcount);
 					dout.writeUTF("Congratulations! You have created your new account");
 					dout.flush();
-					loggedIn = true;
 					return true;
 				}
 			} else if (typeOfAcc.equalsIgnoreCase("admin"))
@@ -973,7 +996,7 @@ public class ServerThread implements Runnable
     System.out.println("Drink successfully added to menu!");
      
 
-    try (FileWriter file = new FileWriter("C:\\Users\\Preslava\\eclipse-workspace\\TastyPizza\\drink.json")) {
+    try (FileWriter file = new FileWriter("C:\\Users\\Preslava\\eclipse-workspace\\TastyPizza\\drinks.json")) {
 
 
         file.write(itemsList.toJSONString());
@@ -989,7 +1012,7 @@ public class ServerThread implements Runnable
     {
 	JSONParser jsonParser = new JSONParser();
     
-    try (FileReader reader = new FileReader("C:\\Users\\Preslava\\eclipse-workspace\\TastyPizza\\sauce.json"))
+    try (FileReader reader = new FileReader("C:\\Users\\Preslava\\eclipse-workspace\\TastyPizza\\sauces.json"))
     {
         Object obj = null;
 
@@ -1026,7 +1049,7 @@ public class ServerThread implements Runnable
     System.out.println("Sauce successfully added to menu!");
      
 
-    try (FileWriter file = new FileWriter("C:\\Users\\Preslava\\eclipse-workspace\\TastyPizza\\sauce.json")) {
+    try (FileWriter file = new FileWriter("C:\\Users\\Preslava\\eclipse-workspace\\TastyPizza\\sauces.json")) {
 
 
         file.write(itemsList.toJSONString());
