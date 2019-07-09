@@ -77,12 +77,10 @@ public class ServerThread implements Runnable
 			din = new DataInputStream(socket.getInputStream());
 			dout = new DataOutputStream(socket.getOutputStream());
 
-			while (!loggedIn)
-			{
 				String input = din.readUTF();
 				if (input.equals("1"))
 				{
-					dout.writeUTF("Login: Please enter an username and password. ");
+					dout.writeUTF("Login: Please enter username and password. ");
 					dout.flush();
 					while (!loggedIn)
 					{
@@ -109,7 +107,7 @@ public class ServerThread implements Runnable
 				} else if (input.equals("2"))
 				{
 					dout.writeUTF(
-							"Register: Please enter an username and a password and the type of account you want to create");
+							"Register: Please enter username and password and the type of account you want to create");
 					dout.flush();
 					boolean didRegister = register();
 					while (!didRegister)
@@ -129,7 +127,7 @@ public class ServerThread implements Runnable
 					dout.writeUTF("ERROR: You didn't choose one of the options.");
 					dout.flush();
 				}
-			}
+			
 				if (loggedIn)
 				{
 					while (true)
@@ -464,8 +462,8 @@ public class ServerThread implements Runnable
 						}
 						}
 					}
+				
 				}
-
 
 		} catch (Exception e)
 		{

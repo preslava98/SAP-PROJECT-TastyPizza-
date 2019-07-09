@@ -25,7 +25,7 @@ public class Client
 				din = new DataInputStream(socket.getInputStream());
 				dout = new DataOutputStream(socket.getOutputStream());
 				boolean loggedIn = false;
-				while(!loggedIn) {
+				
 				boolean hasNotChosen = false;
 
 				String entryOptions = "1. Login\n2. Register\n3. Exit";
@@ -67,7 +67,7 @@ public class Client
 					return;
 				}
 
-				if (anwser.equals("Login: Please enter an username and password. "))
+				if (anwser.equals("Login: Please enter username and password. "))
 				{
 					dout.writeUTF(input.nextLine());
 					dout.flush();
@@ -92,7 +92,7 @@ public class Client
 					//System.out.println(typeOfAccount);
 
 				} else if (anwser.equals(
-						"Register: Please enter an username and a password and the type of account you want to create"))
+						"Register: Please enter username and password and the type of account you want to create"))
 				{
 					dout.writeUTF(input.nextLine());
 					dout.flush();
@@ -127,7 +127,7 @@ public class Client
 							enterNewAccount();
 						}
 					}
-				}
+				
 				}
 				while (true)
 				{
@@ -185,9 +185,8 @@ public class Client
 						
 						if(choice.equals("1"))
 						{
-							boolean menu2=true;
-							while(menu2) {
-							int choice2 = Integer.parseInt(input.nextLine());
+							
+														int choice2 = Integer.parseInt(input.nextLine());
 							dout.writeInt(choice2);
 							dout.flush();
 							
@@ -242,13 +241,9 @@ public class Client
 								dout.writeUTF(input.nextLine());
 								dout.flush();
 								break;
-							case 5:
-								menu2=false;
-								break;
 							}				
 							System.out.println(din.readUTF());
 							break;
-							}
 						}
 						if(choice.equals("2"))
 						{
