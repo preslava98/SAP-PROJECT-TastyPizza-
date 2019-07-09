@@ -186,7 +186,7 @@ public class Client
 						if(choice.equals("1"))
 						{
 							
-														int choice2 = Integer.parseInt(input.nextLine());
+							int choice2 = Integer.parseInt(input.nextLine());
 							dout.writeInt(choice2);
 							dout.flush();
 							
@@ -247,12 +247,53 @@ public class Client
 						}
 						if(choice.equals("2"))
 						{
-							dout.writeUTF(input.nextLine());
-							dout.flush();
-							dout.writeUTF(input.nextLine());
-							dout.flush();
+							String choiceProduct = input.nextLine();
+						    dout.writeUTF(choiceProduct);
+						    dout.flush();
 							
-							System.out.println(din.readUTF());
+							switch(choiceProduct)
+							{
+							case "1":
+								System.out.println(din.readUTF());
+								dout.writeUTF(input.nextLine());
+								dout.flush();
+								dout.writeUTF(input.nextLine());
+								dout.flush();
+								System.out.println(din.readUTF());
+								break;
+								
+							case "2":
+								System.out.println(din.readUTF());
+								dout.writeUTF(input.nextLine());
+								dout.flush();
+								dout.writeUTF(input.nextLine());
+								dout.flush();
+								System.out.println(din.readUTF());
+								break;
+								
+							case "3": 
+								System.out.println(din.readUTF());
+								dout.writeUTF(input.nextLine());
+								dout.flush();
+								dout.writeUTF(input.nextLine());
+								dout.flush();
+								System.out.println(din.readUTF());
+								break;
+								
+							case "4":
+								System.out.println(din.readUTF());
+								dout.writeUTF(input.nextLine());
+								dout.flush();
+								dout.writeUTF(input.nextLine());
+								dout.flush();
+								System.out.println(din.readUTF());
+								break;
+							default:
+								System.out.println("Something went wrong.");
+								break;
+							}
+						
+					
 						}
 						if(choice.equals("4"))
 						{

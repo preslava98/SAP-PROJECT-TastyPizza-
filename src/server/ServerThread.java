@@ -415,29 +415,117 @@ public class ServerThread implements Runnable
 								break;
 							case "2":
 								dout.writeUTF(
-										"To delete a pizza please enter the pizza id and the special admin password to confirm");
+										"Enter what product you want to delete: ");
 								dout.flush();
+							
+								String productDelete = din.readUTF();
+							
 								
-								String pizzaId = din.readUTF();
-								String specialPass = din.readUTF();
-
-								for (int i = 0; i < pizzaList.size(); i++)
+								switch(productDelete)
 								{
-									if (pizzaList.get(i).getId() == Integer.parseInt(pizzaId))
+								case "1":
+									dout.writeUTF(
+											"To delete a pizza please enter the pizza id and the special admin password to confirm");
+									dout.flush();
+									
+									String pizzaId = din.readUTF();
+									int pizzaIdInt = Integer.parseInt(pizzaId);
+									String specialPass = din.readUTF();
+
+									for (int i = 0; i < pizzaList.size(); i++)
 									{
-										if (specialPass.equalsIgnoreCase(Accounts.getSpecialPass()))
+										if (pizzaList.get(i).getId() == Integer.parseInt(pizzaId))
 										{
-											pizzaList.remove(i);
-											dout.writeUTF("The pizza you entered has been removed");
-											dout.flush();
-											break;
+											if (specialPass.equalsIgnoreCase(Accounts.getSpecialPass()))
+											{
+												deletePizza(pizzaIdInt);
+												pizzaList.remove(i);
+												dout.writeUTF("The pizza you entered has been removed");
+												dout.flush();
+												break;
+											}
 										}
 									}
+									break;
+								case "2":
+									dout.writeUTF(
+											"To delete a drink please enter the drink id and the special admin password to confirm");
+									dout.flush();
+									
+									String drinkId = din.readUTF();
+									int drinkIdInt = Integer.parseInt(drinkId);
+									String specialPassDrink = din.readUTF();
+
+									for (int i = 0; i < drinkList.size(); i++)
+									{
+										if (drinkList.get(i).getId() == Integer.parseInt(drinkId))
+										{
+											if (specialPassDrink.equalsIgnoreCase(Accounts.getSpecialPass()))
+											{
+												deleteDrink(drinkIdInt);
+												drinkList.remove(i);
+												dout.writeUTF("The drink you entered has been removed");
+												dout.flush();
+												break;
+											}
+										}
+									}
+									break;
+								case "3":
+									dout.writeUTF(
+											"To delete a sauce please enter the sauce id and the special admin password to confirm");
+									dout.flush();
+									
+									String sauceId = din.readUTF();
+									int sauceIdInt = Integer.parseInt(sauceId);
+									String specialPassSauce = din.readUTF();
+
+									for (int i = 0; i < sauceList.size(); i++)
+									{
+										if (sauceList.get(i).getId() == Integer.parseInt(sauceId))
+										{
+											if (specialPassSauce.equalsIgnoreCase(Accounts.getSpecialPass()))
+											{
+												deleteSauce(sauceIdInt);
+												sauceList.remove(i);
+												dout.writeUTF("The sauce you entered has been removed");
+												dout.flush();
+												break;
+											}
+										}
+									}
+									break;
+								case "4":
+									dout.writeUTF(
+											"To delete a dessert please enter the sauce id and the special admin password to confirm");
+									dout.flush();
+									
+									String dessertId = din.readUTF();
+									int dessertIdInt = Integer.parseInt(dessertId);
+									String specialPassDessert = din.readUTF();
+
+									for (int i = 0; i < dessertList.size(); i++)
+									{
+										if (dessertList.get(i).getId() == Integer.parseInt(dessertId))
+										{
+											if (specialPassDessert.equalsIgnoreCase(Accounts.getSpecialPass()))
+											{
+												deleteDessert(dessertIdInt);
+												dessertList.remove(i);
+												dout.writeUTF("The dessert you entered has been removed");
+												dout.flush();
+												break;
+											}
+										}
+									}
+									break;
+								default:
+									dout.writeUTF(
+											"Error could not delete: Either the pizza id you entered or the special password was wrong!");
+									dout.flush();
+									break;
 								}
-								dout.writeUTF(
-										"Error could not delete: Either the pizza id you entered or the special password was wrong!");
-								dout.flush();
-								break;
+								 break;
 							case "3":
 								String wholeMenu = seeMenu();
 								dout.writeUTF(wholeMenu);
@@ -557,6 +645,8 @@ public class ServerThread implements Runnable
 
 		return menu;
 	}
+	
+
 
 	private boolean register()
 	{
@@ -689,6 +779,230 @@ public class ServerThread implements Runnable
 	}
 
 	// Files functions
+	
+	private void deletePizza(int id)
+	{
+		JSONParser jsonParser = new JSONParser();
+	    
+	    try (FileReader reader = new FileReader("C:\\Users\\Preslava\\eclipse-workspace\\TastyPizza\\pizzas.json"))
+	    {
+	        Object obj = null;
+
+	        try
+	        {
+	        	obj = jsonParser.parse(reader);
+	        } catch (org.json.simple.parser.ParseException e)
+	        {
+	        	e.printStackTrace();
+	        }
+	       
+	        itemsList = (JSONArray) obj;
+
+	        for (int i=0; i < itemsList.size(); i++) {
+	        	Pizza testPizza = parseItemObjectPizza( (JSONObject) itemsList.get(i));
+	        	pizzaList.add(testPizza);
+				everyFood.add(testPizza);
+	        }
+	        
+	        for(int i=0; i < pizzaList.size(); i++)
+	        {
+	        	if(pizzaList.get(i).getId()==id) {
+	        	    itemsList.remove(i);
+
+	       	     
+	        	}
+	        }
+	        
+	        reader.close();
+
+	    } catch (FileNotFoundException e) {
+	        e.printStackTrace();
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	
+
+	    try (FileWriter file = new FileWriter("C:\\Users\\Preslava\\eclipse-workspace\\TastyPizza\\pizzas.json")) {
+
+
+	        file.write(itemsList.toJSONString());
+	        file.flush();
+	        file.close();
+
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	    }
+	}
+	
+	private void deleteDrink(int id)
+	{
+		JSONParser jsonParser = new JSONParser();
+	    
+	    try (FileReader reader = new FileReader("C:\\Users\\Preslava\\eclipse-workspace\\TastyPizza\\drinks.json"))
+	    {
+	        Object obj = null;
+
+	        try
+	        {
+	        	obj = jsonParser.parse(reader);
+	        } catch (org.json.simple.parser.ParseException e)
+	        {
+	        	e.printStackTrace();
+	        }
+	       
+	        itemsList = (JSONArray) obj;
+
+	        for (int i=0; i < itemsList.size(); i++) {
+	        	Drink testDrink = parseItemObjectDrinks( (JSONObject) itemsList.get(i));
+	        	drinkList.add(testDrink);
+				everyFood.add(testDrink);
+	        }
+	        
+	        for(int i=0; i < drinkList.size(); i++)
+	        {
+	        	if(drinkList.get(i).getId()==id) {
+	        	    itemsList.remove(i);
+
+	       	     
+	        	}
+	        }
+	        
+	        reader.close();
+
+	    } catch (FileNotFoundException e) {
+	        e.printStackTrace();
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	
+
+	    try (FileWriter file = new FileWriter("C:\\Users\\Preslava\\eclipse-workspace\\TastyPizza\\drinks.json")) {
+
+
+	        file.write(itemsList.toJSONString());
+	        file.flush();
+	        file.close();
+
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	    }
+	}
+	
+	private void deleteSauce(int id)
+	{
+		JSONParser jsonParser = new JSONParser();
+	    
+	    try (FileReader reader = new FileReader("C:\\Users\\Preslava\\eclipse-workspace\\TastyPizza\\sauces.json"))
+	    {
+	        Object obj = null;
+
+	        try
+	        {
+	        	obj = jsonParser.parse(reader);
+	        } catch (org.json.simple.parser.ParseException e)
+	        {
+	        	e.printStackTrace();
+	        }
+	       
+	        itemsList = (JSONArray) obj;
+
+	        for (int i=0; i < itemsList.size(); i++) {
+	        	Sauce testSauce = parseItemObjectSauce( (JSONObject) itemsList.get(i));
+	        	sauceList.add(testSauce);
+				everyFood.add(testSauce);
+	        }
+	        
+	        for(int i=0; i < sauceList.size(); i++)
+	        {
+	        	if(sauceList.get(i).getId()==id) {
+	        	    itemsList.remove(i);
+
+	       	     
+	        	}
+	        }
+	        
+	        reader.close();
+
+	    } catch (FileNotFoundException e) {
+	        e.printStackTrace();
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	
+
+	    try (FileWriter file = new FileWriter("C:\\Users\\Preslava\\eclipse-workspace\\TastyPizza\\sauces.json")) {
+
+
+	        file.write(itemsList.toJSONString());
+	        file.flush();
+	        file.close();
+
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	    }
+	}
+	
+	private void deleteDessert(int id)
+	{
+		JSONParser jsonParser = new JSONParser();
+	    
+	    try (FileReader reader = new FileReader("C:\\Users\\Preslava\\eclipse-workspace\\TastyPizza\\desserts.json"))
+	    {
+	        Object obj = null;
+
+	        try
+	        {
+	        	obj = jsonParser.parse(reader);
+	        } catch (org.json.simple.parser.ParseException e)
+	        {
+	        	e.printStackTrace();
+	        }
+	       
+	        itemsList = (JSONArray) obj;
+
+	        for (int i=0; i < itemsList.size(); i++) {
+	        	Dessert testDessert = parseItemObjectDessert ((JSONObject) itemsList.get(i));
+	        	dessertList.add(testDessert);
+				everyFood.add(testDessert);
+	        }
+	        
+	        for(int i=0; i < dessertList.size(); i++)
+	        {
+	        	if(dessertList.get(i).getId()==id) {
+	        	    itemsList.remove(i);
+
+	       	     
+	        	}
+	        }
+	        
+	        reader.close();
+
+	    } catch (FileNotFoundException e) {
+	        e.printStackTrace();
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	
+
+	    try (FileWriter file = new FileWriter("C:\\Users\\Preslava\\eclipse-workspace\\TastyPizza\\desserts.json")) {
+
+
+	        file.write(itemsList.toJSONString());
+	        file.flush();
+	        file.close();
+
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	    }
+	}
 
 	private Accounts parseItemObjectAccount(JSONObject item)
 	{
@@ -991,7 +1305,6 @@ public class ServerThread implements Runnable
     } catch (Exception e) {
         e.printStackTrace();
     }
-
 	
    
     itemsList.add(Jobj);
