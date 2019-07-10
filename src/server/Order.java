@@ -5,19 +5,22 @@ public class Order
 	private String name;
 	private int quantity;
 	private int id;
+	private double price;
 	private Food food;
 	
-	public Order(String name, int id, int quantity, Food food)
+	public Order(String name, int id, int quantity, double price, Food food)
 	{
 		this.name = name;
 		this.id = id;
 		this.quantity = quantity;
+		this.price=price;
 		this.food = food;
 	}
 	
 	public String toString()
 	{
-		return "Item: ".concat(name).concat(", Id:" + id).concat(", quantity: ") + quantity;
+		return "Item: " + name + ", Id: " + id + "., Quantity: " + quantity + 
+				", Price: " + price;
 	}
 	
 	public String getName()
@@ -25,19 +28,9 @@ public class Order
 		return name;
 	}
 
-	public void setName(String name)
-	{
-		this.name = name;
-	}
-
 	public int getQuantity()
 	{
 		return quantity;
-	}
-
-	public void setQuantity(int quantity)
-	{
-		this.quantity = quantity;
 	}
 
 	public int getId()
@@ -45,8 +38,16 @@ public class Order
 		return id;
 	}
 
-	public void setId(int id)
+	public double getPrice()
 	{
-		this.id = id;
+		return price;
 	}
+
+	public Food getFood()
+	{
+		return food;
+	}
+	
+	
+
 }

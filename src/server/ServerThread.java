@@ -171,11 +171,16 @@ public class ServerThread implements Runnable
 									{
 										for (int i = 0; i < everyFood.size(); i++)
 										{
+										
+											
 											if (everyFood.get(i).getId() == Integer.parseInt(pizzaId))
 											{
+												String[] splited = everyFood.get(i).getPrice().split("\\s+");
+												double priceFood = Double.parseDouble(splited[0]);
+												
 												orderList.add(
 														new Order(everyFood.get(i).getName(), Integer.parseInt(pizzaId),
-																Integer.parseInt(pizzaQuantity), everyFood.get(i)));
+																Integer.parseInt(pizzaQuantity), priceFood*Integer.parseInt(pizzaQuantity), everyFood.get(i)));
 												dout.writeUTF("Item added to your cart");
 												dout.flush();
 												found = true;
@@ -214,6 +219,7 @@ public class ServerThread implements Runnable
 							case "3":
 								dout.writeUTF("View orders: \n1. Current order\n2. Past orders");
 								dout.flush();
+								double totalPrice = 0;
 								String orderChoice = din.readUTF();
 								if (orderChoice.equals("1"))
 								{
@@ -221,8 +227,9 @@ public class ServerThread implements Runnable
 									for (Order order : orderList)
 									{
 										currentOrder += order.toString() + "\n";
+										totalPrice += order.getPrice();
 									}
-									dout.writeUTF(currentOrder);
+									dout.writeUTF(currentOrder + "\n Total price: " + String.valueOf(String.format("%.2f", totalPrice)) + " BGN");
 									dout.flush();
 								}
 								if (orderChoice.equals("2"))
@@ -415,7 +422,7 @@ public class ServerThread implements Runnable
 								break;
 							case "2":
 								dout.writeUTF(
-										"Enter what product you want to delete: ");
+										"Enter what product you want to delete: \n1.Pizza 2.Drink 3.Sauce 4.Dessert");
 								dout.flush();
 							
 								String productDelete = din.readUTF();
@@ -561,6 +568,8 @@ public class ServerThread implements Runnable
 
 	private boolean enterProduct(String pizzaId, String pizzaQuantity)
 	{
+		double currentPrice = 0;
+		double totalPrice = 0;
 		try
 		{
 			boolean found = false;
@@ -578,17 +587,25 @@ public class ServerThread implements Runnable
 					dout.flush();
 				} else
 				{
+					
 					for (int i = 0; i < everyFood.size(); i++)
 					{
+						
 						if (everyFood.get(i).getId() == Integer.parseInt(pizzaId))
 						{
-							orderList.add(new Order(everyFood.get(i).getName(), Integer.parseInt(pizzaId),
-									Integer.parseInt(pizzaQuantity), everyFood.get(i)));
-							dout.writeUTF("Item added to your cart");
+							String[] splited = everyFood.get(i).getPrice().split("\\s+");
+							double priceFood = Double.parseDouble(splited[0]);
+							currentPrice = priceFood*Integer.parseInt(pizzaQuantity);
+							orderList.add(
+									new Order(everyFood.get(i).getName(), Integer.parseInt(pizzaId),
+											Integer.parseInt(pizzaQuantity), currentPrice, everyFood.get(i)));
+							
+							dout.writeUTF("Item added to your cart.");
 							dout.flush();
 							found = true;
 						}
-					}
+
+					}			
 					if (!found)
 					{
 						dout.writeUTF("Could not find id of the product you choose, please try again:");
@@ -612,8 +629,6 @@ public class ServerThread implements Runnable
 	private String seeMenu()
 	{
 		String menu = "Our pizza menu:\n\n";
-		//for (Pizza pizza : pizzaList)
-		//	menu += pizza.toString().concat("\n");
 		
 		for (int i = 0; i < pizzaList.size(); i++)
 		{
@@ -788,11 +803,11 @@ public class ServerThread implements Runnable
 
 	// Files functions
 	
-	private void deletePizza(int id)
+	private synchronized void deletePizza(int id)
 	{
 		JSONParser jsonParser = new JSONParser();
 	    
-	    try (FileReader reader = new FileReader("C:\\Users\\Preslava\\eclipse-workspace\\TastyPizza\\pizzas.json"))
+	    try (FileReader reader = new FileReader("pizzas.json"))
 	    {
 	        Object obj = null;
 
@@ -816,9 +831,7 @@ public class ServerThread implements Runnable
 	        {
 	        	if(pizzaList.get(i).getId()==id) {
 	        	    itemsList.remove(i);
-
-	       	     
-	        	}
+	        	    }
 	        }
 	        
 	        reader.close();
@@ -830,9 +843,8 @@ public class ServerThread implements Runnable
 	    } catch (Exception e) {
 	    	log4j.error("Something went wrong with the file!"); 
 	    }
-	
 
-	    try (FileWriter file = new FileWriter("C:\\Users\\Preslava\\eclipse-workspace\\TastyPizza\\pizzas.json")) {
+	    try (FileWriter file = new FileWriter("pizzas.json")) {
 
 
 	        file.write(itemsList.toJSONString());
@@ -844,11 +856,11 @@ public class ServerThread implements Runnable
 	    }
 	}
 	
-	private void deleteDrink(int id)
+	private synchronized void deleteDrink(int id)
 	{
 		JSONParser jsonParser = new JSONParser();
 	    
-	    try (FileReader reader = new FileReader("C:\\Users\\Preslava\\eclipse-workspace\\TastyPizza\\drinks.json"))
+	    try (FileReader reader = new FileReader("drinks.json"))
 	    {
 	        Object obj = null;
 
@@ -871,9 +883,7 @@ public class ServerThread implements Runnable
 	        for(int i=0; i < drinkList.size(); i++)
 	        {
 	        	if(drinkList.get(i).getId()==id) {
-	        	    itemsList.remove(i);
-
-	       	     
+	        	    itemsList.remove(i);   	     
 	        	}
 	        }
 	        
@@ -886,10 +896,8 @@ public class ServerThread implements Runnable
 	    } catch (Exception e) {
 	    	log4j.error("Something went wrong with the file!"); 
 	    }
-	
-	
 
-	    try (FileWriter file = new FileWriter("C:\\Users\\Preslava\\eclipse-workspace\\TastyPizza\\drinks.json")) {
+	    try (FileWriter file = new FileWriter("drinks.json")) {
 
 
 	        file.write(itemsList.toJSONString());
@@ -901,11 +909,11 @@ public class ServerThread implements Runnable
 	    }
 	}
 	
-	private void deleteSauce(int id)
+	private synchronized void deleteSauce(int id)
 	{
 		JSONParser jsonParser = new JSONParser();
 	    
-	    try (FileReader reader = new FileReader("C:\\Users\\Preslava\\eclipse-workspace\\TastyPizza\\sauces.json"))
+	    try (FileReader reader = new FileReader("sauces.json"))
 	    {
 	        Object obj = null;
 
@@ -928,9 +936,7 @@ public class ServerThread implements Runnable
 	        for(int i=0; i < sauceList.size(); i++)
 	        {
 	        	if(sauceList.get(i).getId()==id) {
-	        	    itemsList.remove(i);
-
-	       	     
+	        	    itemsList.remove(i);       	     
 	        	}
 	        }
 	        
@@ -944,9 +950,7 @@ public class ServerThread implements Runnable
 	    	log4j.error("Something went wrong with the file!"); 
 	    }
 	
-	
-
-	    try (FileWriter file = new FileWriter("C:\\Users\\Preslava\\eclipse-workspace\\TastyPizza\\sauces.json")) {
+	    try (FileWriter file = new FileWriter("sauces.json")) {
 
 
 	        file.write(itemsList.toJSONString());
@@ -958,11 +962,11 @@ public class ServerThread implements Runnable
 	    }
 	}
 	
-	private void deleteDessert(int id)
+	private synchronized void deleteDessert(int id)
 	{
 		JSONParser jsonParser = new JSONParser();
 	    
-	    try (FileReader reader = new FileReader("C:\\Users\\Preslava\\eclipse-workspace\\TastyPizza\\desserts.json"))
+	    try (FileReader reader = new FileReader("desserts.json"))
 	    {
 	        Object obj = null;
 
@@ -1002,7 +1006,7 @@ public class ServerThread implements Runnable
 	    }
 	
 
-	    try (FileWriter file = new FileWriter("C:\\Users\\Preslava\\eclipse-workspace\\TastyPizza\\desserts.json")) {
+	    try (FileWriter file = new FileWriter("desserts.json")) {
 
 
 	        file.write(itemsList.toJSONString());
@@ -1035,7 +1039,7 @@ public class ServerThread implements Runnable
 	{
 		JSONParser jsonParser = new JSONParser();
 
-		try (FileReader reader = new FileReader("C:\\Users\\Preslava\\eclipse-workspace\\TastyPizza\\accounts.json"))
+		try (FileReader reader = new FileReader("accounts.json"))
 		{
 			Object obj = null;
 			try
@@ -1090,7 +1094,7 @@ public class ServerThread implements Runnable
 	{
 		JSONParser jsonParser = new JSONParser();
 
-		try (FileReader reader = new FileReader("C:\\Users\\Preslava\\eclipse-workspace\\TastyPizza\\sauces.json"))
+		try (FileReader reader = new FileReader("sauces.json"))
 		{
 			Object obj = null;
 			try
@@ -1143,7 +1147,7 @@ public class ServerThread implements Runnable
 	{
 		JSONParser jsonParser = new JSONParser();
 
-		try (FileReader reader = new FileReader("C:\\Users\\Preslava\\eclipse-workspace\\TastyPizza\\drinks.json"))
+		try (FileReader reader = new FileReader("drinks.json"))
 		{
 			Object obj = null;
 			try
@@ -1198,7 +1202,7 @@ public class ServerThread implements Runnable
 	{
 		JSONParser jsonParser = new JSONParser();
 
-		try (FileReader reader = new FileReader("C:\\Users\\Preslava\\eclipse-workspace\\TastyPizza\\pizzas.json"))
+		try (FileReader reader = new FileReader("pizzas.json"))
 		{
 			Object obj = null;
 			try
@@ -1229,11 +1233,11 @@ public class ServerThread implements Runnable
 		
 	}
 	
-	private void writeAccount(JSONObject Jobj)
+	private synchronized void writeAccount(JSONObject Jobj)
     {
 	JSONParser jsonParser = new JSONParser();
     
-    try (FileReader reader = new FileReader("C:\\Users\\Preslava\\eclipse-workspace\\TastyPizza\\accounts.json"))
+    try (FileReader reader = new FileReader("accounts.json"))
     {
         Object obj = null;
 
@@ -1265,7 +1269,7 @@ public class ServerThread implements Runnable
    
     itemsList.add(Jobj);
   
-    try (FileWriter file = new FileWriter("C:\\Users\\Preslava\\eclipse-workspace\\TastyPizza\\accounts.json")) {
+    try (FileWriter file = new FileWriter("accounts.json")) {
 
 
         file.write(itemsList.toJSONString());
@@ -1278,11 +1282,11 @@ public class ServerThread implements Runnable
     }
 	
 
-	private void writePizzaAdmin(JSONObject Jobj)
+	private synchronized void writePizzaAdmin(JSONObject Jobj)
     {
 	JSONParser jsonParser = new JSONParser();
     
-    try (FileReader reader = new FileReader("C:\\Users\\Preslava\\eclipse-workspace\\TastyPizza\\pizzas.json"))
+    try (FileReader reader = new FileReader("pizzas.json"))
     {
         Object obj = null;
 
@@ -1311,15 +1315,13 @@ public class ServerThread implements Runnable
     } catch (Exception e) {
     	log4j.error("Something went wrong with the file!"); 
     }
-
-	
    
     itemsList.add(Jobj);
     
     System.out.println("Pizza successfully added to menu!");
      
 
-    try (FileWriter file = new FileWriter("C:\\Users\\Preslava\\eclipse-workspace\\TastyPizza\\pizzas.json")) {
+    try (FileWriter file = new FileWriter("pizzas.json")) {
 
 
         file.write(itemsList.toJSONString());
@@ -1331,11 +1333,11 @@ public class ServerThread implements Runnable
     }
     }
 	
-	private void writeDrinkAdmin(JSONObject Jobj)
+	private synchronized void writeDrinkAdmin(JSONObject Jobj)
     {
 	JSONParser jsonParser = new JSONParser();
     
-    try (FileReader reader = new FileReader("C:\\Users\\Preslava\\eclipse-workspace\\TastyPizza\\drinks.json"))
+    try (FileReader reader = new FileReader("drinks.json"))
     {
         Object obj = null;
 
@@ -1364,16 +1366,13 @@ public class ServerThread implements Runnable
     } catch (Exception e) {
     	log4j.error("Something went wrong with the file!"); 
     }
-
-
-	
-   
+ 
     itemsList.add(Jobj);
     
     System.out.println("Drink successfully added to menu!");
      
 
-    try (FileWriter file = new FileWriter("C:\\Users\\Preslava\\eclipse-workspace\\TastyPizza\\drinks.json")) {
+    try (FileWriter file = new FileWriter("drinks.json")) {
 
 
         file.write(itemsList.toJSONString());
@@ -1388,11 +1387,11 @@ public class ServerThread implements Runnable
 
     }
 	
-	private void writeSauceAdmin(JSONObject Jobj)
+	private synchronized void writeSauceAdmin(JSONObject Jobj)
     {
 	JSONParser jsonParser = new JSONParser();
     
-    try (FileReader reader = new FileReader("C:\\Users\\Preslava\\eclipse-workspace\\TastyPizza\\sauces.json"))
+    try (FileReader reader = new FileReader("sauces.json"))
     {
         Object obj = null;
 
@@ -1421,16 +1420,13 @@ public class ServerThread implements Runnable
     } catch (Exception e) {
     	log4j.error("Something went wrong with the file!"); 
     }
-
-
-	
    
     itemsList.add(Jobj);
     
     System.out.println("Sauce successfully added to menu!");
      
 
-    try (FileWriter file = new FileWriter("C:\\Users\\Preslava\\eclipse-workspace\\TastyPizza\\sauces.json")) {
+    try (FileWriter file = new FileWriter("sauces.json")) {
 
 
         file.write(itemsList.toJSONString());
@@ -1442,11 +1438,11 @@ public class ServerThread implements Runnable
     }
     }
 	
-	private void writeDessertAdmin(JSONObject Jobj)
+	private synchronized void writeDessertAdmin(JSONObject Jobj)
     {
 	JSONParser jsonParser = new JSONParser();
     
-    try (FileReader reader = new FileReader("C:\\Users\\Preslava\\eclipse-workspace\\TastyPizza\\desserts.json"))
+    try (FileReader reader = new FileReader("desserts.json"))
     {
         Object obj = null;
 
@@ -1484,7 +1480,7 @@ public class ServerThread implements Runnable
     System.out.println("Dessert successfully added to menu!");
      
 
-    try (FileWriter file = new FileWriter("C:\\Users\\Preslava\\eclipse-workspace\\TastyPizza\\desserts.json")) {
+    try (FileWriter file = new FileWriter("desserts.json")) {
 
 
         file.write(itemsList.toJSONString());
@@ -1521,7 +1517,7 @@ public class ServerThread implements Runnable
     {
     	JSONParser jsonParser = new JSONParser();
         
-        try (FileReader reader = new FileReader("C:\\Users\\Preslava\\eclipse-workspace\\TastyPizza\\desserts.json"))
+        try (FileReader reader = new FileReader("desserts.json"))
         {
         	Object obj = null;
         	try
@@ -1556,10 +1552,6 @@ public class ServerThread implements Runnable
 	private static final Logger log4j = LogManager.getLogger(ServerThread.class.getName());
 }
 
-// Things to add: When adding new product fix the exception if they enter a string instead of integer for pizzaId
+
 // Fix the logging out - you can log out but then when you log in you can't enter anything
-// Add synchronization when adding or deleting new pizzas
 // Fix the options after the register happens (currently you can register but it doesn't allow you to continue normally)
-// Add the delete option for the admin (idk what u mean)
-// Add to the second admin optinon: another parameter which gives you what the client wants you to delete and then do what u want to do.
-// Make it multi-threa

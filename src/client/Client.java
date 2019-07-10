@@ -91,7 +91,6 @@ public class Client
 						loggedIn = true;
 					}
 					typeOfAccount = params[4];
-					//System.out.println(typeOfAccount);
 
 				} else if (anwser.equals(
 						"Register: Please enter username and password and the type of account you want to create"))
@@ -110,11 +109,9 @@ public class Client
 					{
 						if (params[0].equalsIgnoreCase("Username"))
 						{
-							// Entering username password and type of account
 							enterNewAccount();
 						} else if (params[0].equalsIgnoreCase("Enter"))
 						{
-							// Entering special password
 							dout.writeUTF(input.nextLine());
 							dout.flush();
 

@@ -9,7 +9,7 @@ public class Food
 	
 	public String toString()
 	{
-		return id + ". Pizza: ".concat(name).concat(", ".concat(size)).concat(", ".concat(price));
+		return id + ". "+ name + ", " + size + ", " + price;
 	}
 	
 	public Food(int id, String name, String size, String price)
