@@ -30,7 +30,6 @@ public class Client
 				boolean loggedIn = false;
 				
 				boolean hasNotChosen = false;
-
 				String entryOptions = "1. Login\n2. Register\n3. Exit";
 				System.out.println(entryOptions);
 				String option = input.nextLine();

@@ -64,8 +64,7 @@ public class ServerThread implements Runnable
 		
 
 		accounts = new ArrayList<Accounts>();
-		accounts.add(new Accounts("1", "1", "client"));
-		accounts.add(new Accounts("2", "2", "admin"));
+		
 		
 		readAccountsClient();
 		readPizzasClient();
@@ -78,12 +77,13 @@ public class ServerThread implements Runnable
 		{
 			din = new DataInputStream(socket.getInputStream());
 			dout = new DataOutputStream(socket.getOutputStream());
-
+			
 				String input = din.readUTF();
 				if (input.equals("1"))
 				{
 					dout.writeUTF("Login: Please enter username and password. ");
 					dout.flush();
+				
 					while (!loggedIn)
 					{
 						String logAnwser = login();
@@ -674,7 +674,8 @@ public class ServerThread implements Runnable
 					return false;
 				} else
 				{
-					Accounts newAccount = new Accounts(username, password, typeOfAcc);
+					PassHash passHash = new PassHash();
+					Accounts newAccount = new Accounts(username, passHash.PassHash(password), typeOfAcc);
 					accounts.add(newAccount);
 					
 					JSONObject AccountObject = new JSONObject();
@@ -707,8 +708,14 @@ public class ServerThread implements Runnable
 					String specialPassword = din.readUTF();
 					if (specialPassword.equalsIgnoreCase(Accounts.getSpecialPass()))
 					{
-						Accounts newAccount = new Accounts(username, password, typeOfAcc);
+						PassHash passHash2 = new PassHash();
+						Accounts newAccount = new Accounts(username, passHash2.PassHash(password), typeOfAcc);
 						accounts.add(newAccount);
+						
+						JSONObject AccountObject = new JSONObject();
+						AccountObject.put("account", newAccount);
+					    
+					    writeAccount(AccountObject);
 						dout.writeUTF("Congratulations! You have created your new account.\n\n\n" + menuOptionsAdmin);
 						dout.flush();
 						loggedIn = true;
@@ -747,7 +754,7 @@ public class ServerThread implements Runnable
 			{
 				if (accounts.get(i).getUsername().equals(username))
 				{
-					accountPass = accounts.get(i).getPassword();
+					accountPass = accounts.get(i).getPassword();				
 					typeOfAcc = accounts.get(i).getTypeOfAcc();
 				}
 			}
@@ -757,15 +764,16 @@ public class ServerThread implements Runnable
 				return "Error";
 			} else
 			{
+				PassHash passCheck = new PassHash();
 				if (typeOfAcc.equals("client"))
 				{
-					if (password.equals(accountPass))
+					if (passCheck.PassHash(password).equals(accountPass))
 						return "client has logged in";
 					else
 						return "Error";
 				} else
 				{
-					if (password.equals(accountPass))
+					if (passCheck.PassHash(password).equals(accountPass))
 						return "admin has logged in";
 					else
 						return "Error";
