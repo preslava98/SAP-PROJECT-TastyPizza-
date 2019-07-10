@@ -6,10 +6,6 @@ public class WholeOrder
 {
 	private ArrayList<Order> orders = new ArrayList<Order>();
 	
-	public WholeOrder()
-	{
-		super();
-	}
 	
 	public void addOrder(Order newOrder)
 	{

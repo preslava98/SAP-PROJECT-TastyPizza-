@@ -1,7 +1,13 @@
 package server;
 
+
 import java.net.ServerSocket;
 import java.net.Socket;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import client.Client;
 
 public class Server {
 
@@ -20,7 +26,9 @@ public class Server {
 
 		}catch(Exception e)
 		{
-			e.printStackTrace();
+			log4j.error("Error opening a new socket or connecting!");
 		}
 	}
+	
+	private static final Logger log4j = LogManager.getLogger(Server.class.getName());
 }

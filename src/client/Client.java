@@ -1,9 +1,12 @@
 package client;
 
+import org.apache.logging.log4j.Logger; 
+import org.apache.logging.log4j.LogManager;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.net.Socket;
 import java.util.Scanner;
+
 
 public class Client
 {
@@ -312,7 +315,7 @@ public class Client
 			}
 		} catch (Exception e)
 		{
-			e.printStackTrace();
+			log4j.info("Something went wrong with one of the previous options. Please try again!"); 
 		}
 
 	}
@@ -333,8 +336,10 @@ public class Client
 			params = anwser.split(" ");
 		} catch (Exception e)
 		{
+			log4j.error("Error entering new account!");
 			e.printStackTrace();
 		}
 	}
 
+	private static final Logger log4j = LogManager.getLogger(Client.class.getName());
 }

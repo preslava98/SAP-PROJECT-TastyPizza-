@@ -14,7 +14,6 @@ public class Food
 	
 	public Food(int id, String name, String size, String price)
 	{
-		super();
 		this.id = id;
 		this.name = name;
 		this.size = size;

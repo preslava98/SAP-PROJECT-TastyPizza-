@@ -8,7 +8,6 @@ public class Accounts {
 	private static final String  specialPass = "iamadmin";
 	
 	public Accounts(String username, String password, String typeOfAcc) {
-		super();
 		this.username = username;
 		this.password = password;
 		this.typeOfAcc = typeOfAcc;

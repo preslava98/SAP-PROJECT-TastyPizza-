@@ -11,10 +11,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import org.apache.logging.log4j.Logger; 
+import org.apache.logging.log4j.LogManager;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-//import org.json.simple.parser.ParseException;
+
 
 public class ServerThread implements Runnable
 {
@@ -36,7 +39,6 @@ public class ServerThread implements Runnable
 	private List<Food> everyFood;
 	private List<Drink> drinkList;
 	private List<Dessert> dessertList;
-	//static JSONArray itemsList = new JSONArray();
 
 	public ServerThread(Socket socket)
 	{
@@ -123,7 +125,6 @@ public class ServerThread implements Runnable
 					return;
 				} else
 				{
-					// you didn't choose one of the optinos
 					dout.writeUTF("ERROR: You didn't choose one of the options.");
 					dout.flush();
 				}
@@ -193,7 +194,6 @@ public class ServerThread implements Runnable
 									dout.writeUTF("No such id for product.");
 									dout.flush();
 								}
-								// continue until they enter 0 for id
 								while (true)
 								{
 									pizzaId = din.readUTF();
@@ -201,9 +201,9 @@ public class ServerThread implements Runnable
 									try
 									{
 										shouldLeave = enterProduct(pizzaId, pizzaQuantity);
-									} catch (NumberFormatException ee)
+									} catch (NumberFormatException e)
 									{
-										ee.printStackTrace();
+										log4j.error("Error exiting from order!");
 										shouldLeave = true;
 									}
 									if (shouldLeave)
@@ -555,7 +555,7 @@ public class ServerThread implements Runnable
 
 		} catch (Exception e)
 		{
-			e.printStackTrace();
+			log4j.info("Something went wrong with one of the previous options. Please try again!"); 
 		}
 	}
 
@@ -604,7 +604,7 @@ public class ServerThread implements Runnable
 			}
 		} catch (Exception exc)
 		{
-			exc.printStackTrace();
+			log4j.error("Error entering product!"); 
 		}
 		return false;
 	}
@@ -729,7 +729,7 @@ public class ServerThread implements Runnable
 
 		} catch (Exception e)
 		{
-			e.printStackTrace();
+			log4j.error("Something went wrong with registration. Try again!"); 
 		}
 		return false;
 	}
@@ -773,7 +773,7 @@ public class ServerThread implements Runnable
 			}
 		} catch (Exception e)
 		{
-			e.printStackTrace();
+			log4j.error("Something went wrong with LOGIN. Try again!"); 
 		}
 		return "Error";
 	}
@@ -793,7 +793,7 @@ public class ServerThread implements Runnable
 	        	obj = jsonParser.parse(reader);
 	        } catch (org.json.simple.parser.ParseException e)
 	        {
-	        	e.printStackTrace();
+	        	log4j.error("Error parsing JSON object!"); 
 	        }
 	       
 	        itemsList = (JSONArray) obj;
@@ -816,11 +816,11 @@ public class ServerThread implements Runnable
 	        reader.close();
 
 	    } catch (FileNotFoundException e) {
-	        e.printStackTrace();
+	    	log4j.error("Error! File NOT FOUND!"); 
 	    } catch (IOException e) {
-	        e.printStackTrace();
+	    	log4j.error("Error reading from file!"); 
 	    } catch (Exception e) {
-	        e.printStackTrace();
+	    	log4j.error("Something went wrong with the file!"); 
 	    }
 	
 
@@ -832,7 +832,7 @@ public class ServerThread implements Runnable
 	        file.close();
 
 	    } catch (IOException e) {
-	        e.printStackTrace();
+	    	log4j.error("Error writing in file!"); 
 	    }
 	}
 	
@@ -849,7 +849,7 @@ public class ServerThread implements Runnable
 	        	obj = jsonParser.parse(reader);
 	        } catch (org.json.simple.parser.ParseException e)
 	        {
-	        	e.printStackTrace();
+	        	log4j.error("Error parsing JSON object!"); 
 	        }
 	       
 	        itemsList = (JSONArray) obj;
@@ -872,12 +872,13 @@ public class ServerThread implements Runnable
 	        reader.close();
 
 	    } catch (FileNotFoundException e) {
-	        e.printStackTrace();
+	    	log4j.error("Error! File NOT FOUND!"); 
 	    } catch (IOException e) {
-	        e.printStackTrace();
+	    	log4j.error("Error reading from file!"); 
 	    } catch (Exception e) {
-	        e.printStackTrace();
+	    	log4j.error("Something went wrong with the file!"); 
 	    }
+	
 	
 
 	    try (FileWriter file = new FileWriter("C:\\Users\\Preslava\\eclipse-workspace\\TastyPizza\\drinks.json")) {
@@ -888,7 +889,7 @@ public class ServerThread implements Runnable
 	        file.close();
 
 	    } catch (IOException e) {
-	        e.printStackTrace();
+	    	log4j.error("Error writing in file!"); 
 	    }
 	}
 	
@@ -905,7 +906,7 @@ public class ServerThread implements Runnable
 	        	obj = jsonParser.parse(reader);
 	        } catch (org.json.simple.parser.ParseException e)
 	        {
-	        	e.printStackTrace();
+	        	log4j.error("Error parsing JSON object!"); 
 	        }
 	       
 	        itemsList = (JSONArray) obj;
@@ -928,12 +929,13 @@ public class ServerThread implements Runnable
 	        reader.close();
 
 	    } catch (FileNotFoundException e) {
-	        e.printStackTrace();
+	    	log4j.error("Error! File NOT FOUND!"); 
 	    } catch (IOException e) {
-	        e.printStackTrace();
+	    	log4j.error("Error reading from file!"); 
 	    } catch (Exception e) {
-	        e.printStackTrace();
+	    	log4j.error("Something went wrong with the file!"); 
 	    }
+	
 	
 
 	    try (FileWriter file = new FileWriter("C:\\Users\\Preslava\\eclipse-workspace\\TastyPizza\\sauces.json")) {
@@ -944,7 +946,7 @@ public class ServerThread implements Runnable
 	        file.close();
 
 	    } catch (IOException e) {
-	        e.printStackTrace();
+	    	log4j.error("Error writing in file!"); 
 	    }
 	}
 	
@@ -961,7 +963,7 @@ public class ServerThread implements Runnable
 	        	obj = jsonParser.parse(reader);
 	        } catch (org.json.simple.parser.ParseException e)
 	        {
-	        	e.printStackTrace();
+	        	log4j.error("Error parsing JSON object!"); 
 	        }
 	       
 	        itemsList = (JSONArray) obj;
@@ -984,11 +986,11 @@ public class ServerThread implements Runnable
 	        reader.close();
 
 	    } catch (FileNotFoundException e) {
-	        e.printStackTrace();
+	    	log4j.error("Error! File NOT FOUND!"); 
 	    } catch (IOException e) {
-	        e.printStackTrace();
+	    	log4j.error("Error reading from file!"); 
 	    } catch (Exception e) {
-	        e.printStackTrace();
+	    	log4j.error("Something went wrong with the file!"); 
 	    }
 	
 
@@ -1000,7 +1002,7 @@ public class ServerThread implements Runnable
 	        file.close();
 
 	    } catch (IOException e) {
-	        e.printStackTrace();
+	    	log4j.error("Error writing in file!"); 
 	    }
 	}
 
@@ -1033,7 +1035,7 @@ public class ServerThread implements Runnable
 				obj = jsonParser.parse(reader);
 			} catch (org.json.simple.parser.ParseException e)
 			{
-				e.printStackTrace();
+				log4j.error("Error parsing JSON object!"); 
 			}
 
 			JSONArray itemsList = (JSONArray) obj;
@@ -1045,13 +1047,14 @@ public class ServerThread implements Runnable
 				accounts.add(acc);
 			}
 
-		} catch (FileNotFoundException e)
-		{
-			e.printStackTrace();
-		} catch (IOException e)
-		{
-			e.printStackTrace();
-		}
+		 } catch (FileNotFoundException e) {
+		    	log4j.error("Error! File NOT FOUND!"); 
+		    } catch (IOException e) {
+		    	log4j.error("Error reading from file!"); 
+		    } catch (Exception e) {
+		    	log4j.error("Something went wrong with the file!"); 
+		    }
+		
 	}
 
 	private Sauce parseItemObjectSauce(JSONObject item)
@@ -1087,7 +1090,7 @@ public class ServerThread implements Runnable
 				obj = jsonParser.parse(reader);
 			} catch (org.json.simple.parser.ParseException e)
 			{
-				e.printStackTrace();
+				log4j.error("Error parsing JSON object!"); 
 			}
 
 			JSONArray itemsList = (JSONArray) obj;
@@ -1099,14 +1102,14 @@ public class ServerThread implements Runnable
 				sauceList.add(food);
 				everyFood.add(food);
 			}
-
-		} catch (FileNotFoundException e)
-		{
-			e.printStackTrace();
-		} catch (IOException e)
-		{
-			e.printStackTrace();
-		}
+		 } catch (FileNotFoundException e) {
+		    	log4j.error("Error! File NOT FOUND!"); 
+		    } catch (IOException e) {
+		    	log4j.error("Error reading from file!"); 
+		    } catch (Exception e) {
+		    	log4j.error("Something went wrong with the file!"); 
+		    }
+		
 	}
 
 	private Drink parseItemObjectDrinks(JSONObject item)
@@ -1140,7 +1143,7 @@ public class ServerThread implements Runnable
 				obj = jsonParser.parse(reader);
 			} catch (org.json.simple.parser.ParseException e)
 			{
-				e.printStackTrace();
+				log4j.error("Error parsing JSON object!"); 
 			}
 
 			JSONArray itemsList = (JSONArray) obj;
@@ -1153,13 +1156,14 @@ public class ServerThread implements Runnable
 				everyFood.add(food);
 			}
 
-		} catch (FileNotFoundException e)
-		{
-			e.printStackTrace();
-		} catch (IOException e)
-		{
-			e.printStackTrace();
-		}
+		 } catch (FileNotFoundException e) {
+		    	log4j.error("Error! File NOT FOUND!"); 
+		    } catch (IOException e) {
+		    	log4j.error("Error reading from file!"); 
+		    } catch (Exception e) {
+		    	log4j.error("Something went wrong with the file!"); 
+		    }
+		
 	}
 
 	private static Pizza parseItemObjectPizza(JSONObject item)
@@ -1194,7 +1198,7 @@ public class ServerThread implements Runnable
 				obj = jsonParser.parse(reader);
 			} catch (org.json.simple.parser.ParseException e)
 			{
-				e.printStackTrace();
+				log4j.error("Error parsing JSON object!"); 
 			}
 
 			JSONArray itemsList = (JSONArray) obj;
@@ -1207,16 +1211,14 @@ public class ServerThread implements Runnable
 				everyFood.add(testPizza);
 			}
 
-		} catch (FileNotFoundException e)
-		{
-			e.printStackTrace();
-		} catch (IOException e)
-		{
-			e.printStackTrace();
-		} catch (Exception e)
-		{
-			e.printStackTrace();
-		}
+		 } catch (FileNotFoundException e) {
+		    	log4j.error("Error! File NOT FOUND!"); 
+		    } catch (IOException e) {
+		    	log4j.error("Error reading from file!"); 
+		    } catch (Exception e) {
+		    	log4j.error("Something went wrong with the file!"); 
+		    }
+		
 	}
 	
 	private void writeAccount(JSONObject Jobj)
@@ -1232,7 +1234,7 @@ public class ServerThread implements Runnable
         	obj = jsonParser.parse(reader);
         } catch (org.json.simple.parser.ParseException e)
         {
-        	e.printStackTrace();
+        	log4j.error("Error parsing JSON object!"); 
         }
        
         itemsList = (JSONArray) obj;
@@ -1244,21 +1246,17 @@ public class ServerThread implements Runnable
         }
         
         reader.close();
-
+        
     } catch (FileNotFoundException e) {
-        e.printStackTrace();
+    	log4j.error("Error! File NOT FOUND!"); 
     } catch (IOException e) {
-        e.printStackTrace();
+    	log4j.error("Error reading from file!"); 
     } catch (Exception e) {
-        e.printStackTrace();
+    	log4j.error("Something went wrong with the file!"); 
     }
-
-	
    
     itemsList.add(Jobj);
   
-     
-
     try (FileWriter file = new FileWriter("C:\\Users\\Preslava\\eclipse-workspace\\TastyPizza\\accounts.json")) {
 
 
@@ -1267,7 +1265,7 @@ public class ServerThread implements Runnable
         file.close();
 
     } catch (IOException e) {
-        e.printStackTrace();
+    	log4j.error("Error writing in file!"); 
     }
     }
 	
@@ -1285,7 +1283,7 @@ public class ServerThread implements Runnable
         	obj = jsonParser.parse(reader);
         } catch (org.json.simple.parser.ParseException e)
         {
-        	e.printStackTrace();
+        	log4j.error("Error parsing JSON object!"); 
         }
        
         itemsList = (JSONArray) obj;
@@ -1299,12 +1297,13 @@ public class ServerThread implements Runnable
         reader.close();
 
     } catch (FileNotFoundException e) {
-        e.printStackTrace();
+    	log4j.error("Error! File NOT FOUND!"); 
     } catch (IOException e) {
-        e.printStackTrace();
+    	log4j.error("Error reading from file!"); 
     } catch (Exception e) {
-        e.printStackTrace();
+    	log4j.error("Something went wrong with the file!"); 
     }
+
 	
    
     itemsList.add(Jobj);
@@ -1320,7 +1319,7 @@ public class ServerThread implements Runnable
         file.close();
 
     } catch (IOException e) {
-        e.printStackTrace();
+    	log4j.error("Error writing in file!"); 
     }
     }
 	
@@ -1337,7 +1336,7 @@ public class ServerThread implements Runnable
         	obj = jsonParser.parse(reader);
         } catch (org.json.simple.parser.ParseException e)
         {
-        	e.printStackTrace();
+        	log4j.error("Error parsing JSON object!"); 
         }
        
         itemsList = (JSONArray) obj;
@@ -1351,12 +1350,13 @@ public class ServerThread implements Runnable
         reader.close();
 
     } catch (FileNotFoundException e) {
-        e.printStackTrace();
+    	log4j.error("Error! File NOT FOUND!"); 
     } catch (IOException e) {
-        e.printStackTrace();
+    	log4j.error("Error reading from file!"); 
     } catch (Exception e) {
-        e.printStackTrace();
+    	log4j.error("Something went wrong with the file!"); 
     }
+
 
 	
    
@@ -1372,9 +1372,12 @@ public class ServerThread implements Runnable
         file.flush();
         file.close();
 
-    } catch (IOException e) {
-        e.printStackTrace();
+    } catch (FileNotFoundException e) {
+    	log4j.error("Error! File NOT FOUND!"); 
+    } catch (Exception e) {
+    	log4j.error("Something went wrong with the file!"); 
     }
+
     }
 	
 	private void writeSauceAdmin(JSONObject Jobj)
@@ -1390,7 +1393,7 @@ public class ServerThread implements Runnable
         	obj = jsonParser.parse(reader);
         } catch (org.json.simple.parser.ParseException e)
         {
-        	e.printStackTrace();
+        	log4j.error("Error parsing JSON object!"); 
         }
        
         itemsList = (JSONArray) obj;
@@ -1404,12 +1407,13 @@ public class ServerThread implements Runnable
         reader.close();
 
     } catch (FileNotFoundException e) {
-        e.printStackTrace();
+    	log4j.error("Error! File NOT FOUND!"); 
     } catch (IOException e) {
-        e.printStackTrace();
+    	log4j.error("Error reading from file!"); 
     } catch (Exception e) {
-        e.printStackTrace();
+    	log4j.error("Something went wrong with the file!"); 
     }
+
 
 	
    
@@ -1426,7 +1430,7 @@ public class ServerThread implements Runnable
         file.close();
 
     } catch (IOException e) {
-        e.printStackTrace();
+    	log4j.error("Error writing in file!"); 
     }
     }
 	
@@ -1443,7 +1447,7 @@ public class ServerThread implements Runnable
         	obj = jsonParser.parse(reader);
         } catch (org.json.simple.parser.ParseException e)
         {
-        	e.printStackTrace();
+        	log4j.error("Error parsing JSON object!"); 
         }
        
         itemsList = (JSONArray) obj;
@@ -1455,14 +1459,15 @@ public class ServerThread implements Runnable
         }
         
         reader.close();
-
+        
     } catch (FileNotFoundException e) {
-        e.printStackTrace();
+    	log4j.error("Error! File NOT FOUND!"); 
     } catch (IOException e) {
-        e.printStackTrace();
+    	log4j.error("Error reading from file!"); 
     } catch (Exception e) {
-        e.printStackTrace();
+    	log4j.error("Something went wrong with the file!"); 
     }
+
 
 	
    
@@ -1479,7 +1484,7 @@ public class ServerThread implements Runnable
         file.close();
 
     } catch (IOException e) {
-        e.printStackTrace();
+    	log4j.error("Error writing in file!"); 
     }
     }
 	
@@ -1516,7 +1521,7 @@ public class ServerThread implements Runnable
         		obj = jsonParser.parse(reader);
         	} catch (org.json.simple.parser.ParseException e)
         	{
-        		e.printStackTrace();
+        		log4j.error("Error parsing JSON object!"); 
         	}
         	
         	
@@ -1531,13 +1536,16 @@ public class ServerThread implements Runnable
 			}
  
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+	    	log4j.error("Error! File NOT FOUND!"); 
+	    } catch (IOException e) {
+	    	log4j.error("Error reading from file!"); 
+	    } catch (Exception e) {
+	    	log4j.error("Something went wrong with the file!"); 
+	    }
+	
     }
+	
+	private static final Logger log4j = LogManager.getLogger(ServerThread.class.getName());
 }
 
 // Things to add: When adding new product fix the exception if they enter a string instead of integer for pizzaId
