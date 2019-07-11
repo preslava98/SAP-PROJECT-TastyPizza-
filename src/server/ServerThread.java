@@ -268,31 +268,21 @@ public class ServerThread implements Runnable
 								
 								
 								String allOrders = "";
+													
 								
 								
 								if (pastOrders.size() > 0)
 								{
 									for (int i = 0; i < pastOrders.size(); i++)
 									{
+										allOrders += "Order num: " + (i + 1) + ":\n";
 										for (int j = 0; j < pastOrders.get(i).getOrder().size(); j++)
-											System.out.println(pastOrders.get(i).getOrder().get(j));
+										{
+											allOrders += pastOrders.get(i).getOrder().get(j).toString() + "\n";
+											System.out.println(pastOrders.get(i).getOrder().get(j).toString() + "\n");
+										}
 									}
 								}
-								
-								
-								
-//								if (pastOrders.size() > 0)
-//								{
-//									for (int i = 0; i < pastOrders.size(); i++)
-//									{
-//										allOrders += "Order num: " + (i + 1) + ":\n";
-//										for (int j = 0; j < pastOrders.get(i).getOrder().size(); j++)
-//										{
-//											allOrders += pastOrders.get(i).getOrder().get(j).toString() + "\n";
-//											System.out.println(pastOrders.get(i).getOrder().get(j).toString() + "\n");
-//										}
-//									}
-//								}
 								completedOrders(allOrders);
 
 								dout.writeUTF("Your order is complete and on its way!");
@@ -581,17 +571,26 @@ public class ServerThread implements Runnable
 								
 								//Which ids you want to delete
 								String idOfOrder = din.readUTF();
-								String params[] = idOfOrder.split(" ");
-								
-								for (int i = 0; i < readAllPoruchki.size(); i++)
+								String params[] = idOfOrder.split("\\s+");
+
+								String[] array = readAllPoruchki.toArray(new String[readAllPoruchki.size()]);
+								readAllPoruchki.clear();
+								for (int i = 0; i < params.length; i++)
 								{
-									for(int j = 0; j < params.length; j++)
+									for(int j = 0; j < array.length; j++)
 									{
-										if (Integer.parseInt(params[j]) == i)
-											readAllPoruchki.remove(i);
+										if (Integer.parseInt(params[i])-1 == j)
+										{
+												array[j]=null;
+										}
 									}
 								}
-								
+
+								for(int i=0; i<array.length; i++){
+									if(array[i] != null){
+										readAllPoruchki.add(array[i]);
+									}
+								}
 								String accepted = "";
 								for (String acc : readAllPoruchki)
 									accepted += acc + "\n";
@@ -1545,9 +1544,6 @@ public class ServerThread implements Runnable
     	log4j.error("Something went wrong with the file!"); 
     }
 
-
-	
-   
     itemsList.add(Jobj);
     
     System.out.println("Dessert successfully added to menu!");
@@ -1629,7 +1625,9 @@ public class ServerThread implements Runnable
 	{
 		try
 		{
-			String content = new Scanner(new File("poruchki.txt")).useDelimiter("\\Z").next();
+			File file = new File ("poruchki.txt");
+			if (file.length() != 0) {
+			String content = new Scanner(file).useDelimiter("\\Z").next();
 
 			String params[] = content.split("Order num: ");
 			readAllPoruchki.clear();
@@ -1637,7 +1635,7 @@ public class ServerThread implements Runnable
 			{
 				readAllPoruchki.add(params[i]);
 			}
-			
+			}
 		} catch (IOException e)
 		{
 			log4j.error("Error writing in file!");
@@ -1649,13 +1647,8 @@ public class ServerThread implements Runnable
 	
 	private void completedOrders(String orders)
 	{
-//		String[] splited = orders.split("Order");
-//		for (int i = 1; i <= splited.length - 1; i++)
-//		{
-//			completedOrdersList.add(splited[i]);
-//		}
 
-		try (FileWriter file = new FileWriter("poruchki.txt", true))
+		try (FileWriter file = new FileWriter("poruchki.txt"))
 		{
 
 			file.write(orders.concat("\n"));
