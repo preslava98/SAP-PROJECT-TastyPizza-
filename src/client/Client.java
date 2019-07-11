@@ -1,3 +1,4 @@
+
 package client;
 
 import org.apache.logging.log4j.Logger; 
@@ -298,6 +299,7 @@ public class Client
 						{
 							dout.writeUTF(input.nextLine());
 							dout.flush();
+							System.out.println(din.readUTF());
 							
 						}
 						if(choice.equals("6")) {

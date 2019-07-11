@@ -1,0 +1,129 @@
+Order num: 1:
+ Item: Pizza Peperoni, Id: 3., Quantity: 3, Price: 35.67
+
+ Item: Pizza Prosciutto crudo, Id: 4., Quantity: 4, Price: 58.36
+
+
+Order num: 1:
+ Item: Pizza Peperoni, Id: 3., Quantity: 3, Price: 35.67
+
+ Item: Pizza Prosciutto crudo, Id: 4., Quantity: 4, Price: 58.36
+
+Order num: 2:
+ Item: Pizza Capriciosa, Id: 6., Quantity: 6, Price: 59.94
+
+ Item: Pizza Mortadella, Id: 7., Quantity: 7, Price: 69.93
+
+
+Order num: 1:
+ Item: Pizza Calzone, Id: 5., Quantity: 5, Price: 49.45
+
+ Item: Pizza Capriciosa, Id: 6., Quantity: 6, Price: 59.94
+
+ Item: Pizza Mortadella, Id: 7., Quantity: 7, Price: 69.93
+
+
+Order num: 1:
+ Item: Pizza Calzone, Id: 5., Quantity: 5, Price: 49.45
+
+ Item: Pizza Capriciosa, Id: 6., Quantity: 6, Price: 59.94
+
+ Item: Pizza Mortadella, Id: 7., Quantity: 7, Price: 69.93
+
+Order num: 2:
+ Item: Pizza Mortadella, Id: 7., Quantity: 1, Price: 9.99
+
+ Item: Pizza Capriciosa, Id: 6., Quantity: 1, Price: 9.99
+
+ Item: Pizza Calzone, Id: 5., Quantity: 1, Price: 9.89
+
+
+Order num: 1:
+ Item: Pizza Margarita, Id: 1., Quantity: 2, Price: 13.98
+
+ Item: Pizza Peperoni, Id: 3., Quantity: 4, Price: 47.56
+
+ Item: Pizza Calzone, Id: 5., Quantity: 6, Price: 59.34
+
+ Item: Pizza Mortadella, Id: 7., Quantity: 8, Price: 79.92
+
+
+Order num: 1:
+ Item: Pizza Margarita, Id: 1., Quantity: 2, Price: 13.98
+
+ Item: Pizza Peperoni, Id: 3., Quantity: 4, Price: 47.56
+
+ Item: Pizza Calzone, Id: 5., Quantity: 6, Price: 59.34
+
+ Item: Pizza Mortadella, Id: 7., Quantity: 8, Price: 79.92
+
+Order num: 2:
+ Item: Pizza Margarita, Id: 1., Quantity: 1, Price: 6.99
+
+
+Order num: 1:
+ Item: Pizza Margarita, Id: 1., Quantity: 1, Price: 6.99
+
+
+Order num: 1:
+ Item: Pizza Margarita, Id: 1., Quantity: 1, Price: 6.99
+
+Order num: 2:
+ Item: Pizza Quatro formagio, Id: 2., Quantity: 2, Price: 17.98
+
+
+Order num: 1:
+ Item: Pizza Margarita, Id: 1., Quantity: 1, Price: 6.99
+
+Order num: 2:
+ Item: Pizza Quatro formagio, Id: 2., Quantity: 2, Price: 17.98
+
+Order num: 3:
+ Item: Pizza Peperoni, Id: 3., Quantity: 3, Price: 35.67
+
+
+Order num: 1:
+ Item: Pizza Margarita, Id: 1., Quantity: 1, Price: 6.99
+
+Order num: 2:
+ Item: Pizza Quatro formagio, Id: 2., Quantity: 2, Price: 17.98
+
+Order num: 3:
+ Item: Pizza Peperoni, Id: 3., Quantity: 3, Price: 35.67
+
+Order num: 4:
+ Item: Pizza Margarita, Id: 1., Quantity: 1, Price: 6.99
+
+ Item: Ketchup, Id: 22., Quantity: 2, Price: 2.98
+
+ Item: Pizza Peperoni, Id: 3., Quantity: 3, Price: 35.67
+
+ Item: Pizza Prosciutto crudo, Id: 4., Quantity: 4, Price: 58.36
+
+
+Order num: 1:
+ Item: Pizza Margarita, Id: 1., Quantity: 1, Price: 6.99
+
+Order num: 2:
+ Item: Pizza Quatro formagio, Id: 2., Quantity: 2, Price: 17.98
+
+Order num: 3:
+ Item: Pizza Peperoni, Id: 3., Quantity: 3, Price: 35.67
+
+Order num: 4:
+ Item: Pizza Margarita, Id: 1., Quantity: 1, Price: 6.99
+
+ Item: Ketchup, Id: 22., Quantity: 2, Price: 2.98
+
+ Item: Pizza Peperoni, Id: 3., Quantity: 3, Price: 35.67
+
+ Item: Pizza Prosciutto crudo, Id: 4., Quantity: 4, Price: 58.36
+
+Order num: 5:
+ Item: Pizza Calzone, Id: 5., Quantity: 5, Price: 49.45
+
+ Item: Pizza Capriciosa, Id: 6., Quantity: 6, Price: 59.94
+
+ Item: Pizza Mortadella, Id: 7., Quantity: 7, Price: 69.93
+
+

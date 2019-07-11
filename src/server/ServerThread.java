@@ -2,6 +2,7 @@ package server;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -11,9 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-import org.apache.logging.log4j.Logger; 
 import org.apache.logging.log4j.LogManager;
-
+import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -39,6 +39,7 @@ public class ServerThread implements Runnable
 	private List<Food> everyFood;
 	private List<Drink> drinkList;
 	private List<Dessert> dessertList;
+	private ArrayList<String> readAllPoruchki = new ArrayList<String>();
 
 	public ServerThread(Socket socket)
 	{
@@ -246,7 +247,6 @@ public class ServerThread implements Runnable
 												allOrders += pastOrders.get(i).getOrder().get(j).toString() + "\n";
 											}
 										}
-
 										dout.writeUTF(allOrders);
 										dout.flush();
 									} else
@@ -265,8 +265,39 @@ public class ServerThread implements Runnable
 								}
 								orderList.clear();
 								pastOrders.add(finishedOrder);
+								
+								
+								String allOrders = "";
+								
+								
+								if (pastOrders.size() > 0)
+								{
+									for (int i = 0; i < pastOrders.size(); i++)
+									{
+										for (int j = 0; j < pastOrders.get(i).getOrder().size(); j++)
+											System.out.println(pastOrders.get(i).getOrder().get(j));
+									}
+								}
+								
+								
+								
+//								if (pastOrders.size() > 0)
+//								{
+//									for (int i = 0; i < pastOrders.size(); i++)
+//									{
+//										allOrders += "Order num: " + (i + 1) + ":\n";
+//										for (int j = 0; j < pastOrders.get(i).getOrder().size(); j++)
+//										{
+//											allOrders += pastOrders.get(i).getOrder().get(j).toString() + "\n";
+//											System.out.println(pastOrders.get(i).getOrder().get(j).toString() + "\n");
+//										}
+//									}
+//								}
+								completedOrders(allOrders);
+
 								dout.writeUTF("Your order is complete and on its way!");
 								dout.flush();
+								
 								break;
 							case "5":
 								dout.writeUTF("Logging out.");
@@ -539,12 +570,53 @@ public class ServerThread implements Runnable
 								dout.flush();
 								break;
 							case "4":
-								// dout.writeUTF("To delete a part of the order please select the number and add
-								// the special password!\n" + );
+								readCompletedOrders();
+								String content = "";
+								for (String s : readAllPoruchki)
+									content += s + "\n";
+									
+
+								dout.writeUTF(content + "\nEnter which ids of order you want to delete. The rest will be accepted!");
+								dout.flush();
+								
+								//Which ids you want to delete
+								String idOfOrder = din.readUTF();
+								String params[] = idOfOrder.split(" ");
+								
+								for (int i = 0; i < readAllPoruchki.size(); i++)
+								{
+									for(int j = 0; j < params.length; j++)
+									{
+										if (Integer.parseInt(params[j]) == i)
+											readAllPoruchki.remove(i);
+									}
+								}
+								
+								String accepted = "";
+								for (String acc : readAllPoruchki)
+									accepted += acc + "\n";
+								
+								try (FileWriter file = new FileWriter("accepted.txt"))
+								{
+									file.write(accepted);
+									file.close();
+								}catch (Exception e)
+								{
+									e.printStackTrace();
+								}
+								
+								
+								try (FileWriter file = new FileWriter("poruchki.txt"))
+								{
+									file.write("");
+									file.close();
+								}catch (Exception e)
+								{
+									e.printStackTrace();
+								}
+								dout.writeUTF("Done, you can see the orders you accept in the other file");
 								dout.flush();
 
-								String idOfOrder = din.readUTF();
-								String specialPassword = din.readUTF();
 								break;
 							case "6":
 								System.exit(0);
@@ -562,6 +634,7 @@ public class ServerThread implements Runnable
 
 		} catch (Exception e)
 		{
+			e.printStackTrace();
 			log4j.info("Something went wrong with one of the previous options. Please try again!"); 
 		}
 	}
@@ -1550,6 +1623,50 @@ public class ServerThread implements Runnable
     }
 	
 	private static final Logger log4j = LogManager.getLogger(ServerThread.class.getName());
+	
+	
+	private ArrayList<String> readCompletedOrders()
+	{
+		try
+		{
+			String content = new Scanner(new File("poruchki.txt")).useDelimiter("\\Z").next();
+
+			String params[] = content.split("Order num: ");
+			readAllPoruchki.clear();
+			for(int i = 0; i < params.length; i++)
+			{
+				readAllPoruchki.add(params[i]);
+			}
+			
+		} catch (IOException e)
+		{
+			log4j.error("Error writing in file!");
+		}
+		
+		
+		return readAllPoruchki;
+	}
+	
+	private void completedOrders(String orders)
+	{
+//		String[] splited = orders.split("Order");
+//		for (int i = 1; i <= splited.length - 1; i++)
+//		{
+//			completedOrdersList.add(splited[i]);
+//		}
+
+		try (FileWriter file = new FileWriter("poruchki.txt", true))
+		{
+
+			file.write(orders.concat("\n"));
+			file.flush();
+			file.close();
+
+		} catch (IOException e)
+		{
+			log4j.error("Error writing in file!");
+		}
+	}
 }
 
 

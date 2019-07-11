@@ -19,8 +19,8 @@ public class Order
 	
 	public String toString()
 	{
-		return "Item: " + name + ", Id: " + id + "., Quantity: " + quantity + 
-				", Price: " + price;
+		return " Item: " + name + ", Id: " + id + "., Quantity: " + quantity + 
+				", Price: " + price + "\n";
 	}
 	
 	public String getName()
