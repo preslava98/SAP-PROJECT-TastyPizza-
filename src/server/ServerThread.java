@@ -571,30 +571,21 @@ public class ServerThread implements Runnable
 								
 								//Which ids you want to delete
 								String idOfOrder = din.readUTF();
-								String params[] = idOfOrder.split("\\s+");
+								String params[] = idOfOrder.split(" ");
 
-								String[] array = readAllPoruchki.toArray(new String[readAllPoruchki.size()]);
-								readAllPoruchki.clear();
-								for (int i = 0; i < params.length; i++)
+								for (int i = 0; i < readAllPoruchki.size(); i++)
 								{
-									for(int j = 0; j < array.length; j++)
+									for(int j = 0; j < params.length; j++)
 									{
-										if (Integer.parseInt(params[i])-1 == j)
-										{
-												array[j]=null;
-										}
+										if (Integer.parseInt(params[j]) == i)
+											readAllPoruchki.remove(i);
 									}
 								}
 
-								for(int i=0; i<array.length; i++){
-									if(array[i] != null){
-										readAllPoruchki.add(array[i]);
-									}
-								}
 								String accepted = "";
 								for (String acc : readAllPoruchki)
 									accepted += acc + "\n";
-								
+
 								try (FileWriter file = new FileWriter("accepted.txt"))
 								{
 									file.write(accepted);
@@ -603,8 +594,8 @@ public class ServerThread implements Runnable
 								{
 									e.printStackTrace();
 								}
-								
-								
+
+
 								try (FileWriter file = new FileWriter("poruchki.txt"))
 								{
 									file.write("");
@@ -615,11 +606,19 @@ public class ServerThread implements Runnable
 								}
 								dout.writeUTF("Done, you can see the orders you accept in the other file");
 								dout.flush();
-
+								break;
+							case "5":
+								dout.writeUTF("Logging out.");
+								dout.flush();
+								//loggedIn = false;
 								break;
 							case "6":
-								System.exit(0);
-								break;
+								dout.writeUTF("Exiting...\nBye");
+								dout.flush();
+								din.close();
+								dout.close();
+								socket.close();
+								return;
 							default:
 								dout.writeUTF("Error you did not enter one of the options!\n" + menuOptionsAdmin);
 								dout.flush();
@@ -803,7 +802,7 @@ public class ServerThread implements Runnable
 						AccountObject.put("account", newAccount);
 					    
 					    writeAccount(AccountObject);
-						dout.writeUTF("Congratulations! You have created your new account.\n\n\n" + menuOptionsAdmin);
+						dout.writeUTF("Congratulations! You have created your new account.\n\n\n");
 						dout.flush();
 						loggedIn = true;
 						return true;
@@ -1661,7 +1660,3 @@ public class ServerThread implements Runnable
 		}
 	}
 }
-
-
-// Fix the logging out - you can log out but then when you log in you can't enter anything
-// Fix the options after the register happens (currently you can register but it doesn't allow you to continue normally)

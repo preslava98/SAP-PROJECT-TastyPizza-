@@ -302,6 +302,9 @@ public class Client
 							System.out.println(din.readUTF());
 							
 						}
+						if(choice.equals("5")) {
+							break;
+						}
 						if(choice.equals("6")) {
 							System.exit(0);
 						}
